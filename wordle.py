@@ -1,36 +1,45 @@
 palabra_secreta = "limon"
-letras_verificadas = []
-cantidad_letras = 5
+cantidad_letras = len(palabra_secreta)
+max_intentos = 6
 
 def verificador_palabra(palabra_ingresada, palabra_secreta):
-    letras_verificadas = []
-
-    for i in range(cantidad_letras):
-        las_palabras_son_iguales = palabra_ingresada[i] == palabra_secreta[i] # True o False
-        la_letra_existe_en_la_palabra = palabra_ingresada[i] in palabra_secreta 
-        
-        if las_palabras_son_iguales:
-            letras_verificadas.append(f"[{palabra_ingresada[i]}]")
-        elif la_letra_existe_en_la_palabra:
-            letras_verificadas.append(f"({palabra_ingresada[i]})")
-        else:
-            letras_verificadas.append(palabra_ingresada[i])
+    resultado = []
     
-    return letras_verificadas
+    for i in range(cantidad_letras):
+        letra = palabra_ingresada[i]
+        
+        if letra == palabra_secreta[i]:
+            resultado.append(f"[{letra}]")
+        elif letra in palabra_secreta:
+            resultado.append(f"({letra})")
+        else:
+            resultado.append(f" {letra} ")
+    # el .join solo es para separar por espacio las letras lo mire en youtube
+    return " ".join(resultado)
 
-intentos = 0
+def iniciar_juego():
+    intentos = 0
+    print(f"Juego de palabras: Tienes {max_intentos} intentos para adivinar.")
 
-while intentos < 6:
-    print(f"te quedan {6 - intentos} intentos")
-    intentos = intentos + 1
-    palabra_ingresada = input("Ingrese una palabra")
-    print(f"la palabra ingresada es: {palabra_ingresada}")
-    respuesta = verificador_palabra(palabra_ingresada, palabra_secreta)
-    print(respuesta)
+    while intentos < max_intentos:
+        intentos_restantes = max_intentos - intentos
+        print(f"\nTe quedan {intentos_restantes} intentos")
+        
+        entrada = input("Ingrese una palabra: ").lower().strip()
 
-    if palabra_ingresada == palabra_secreta:
-        print("\n Acertaste la palabra. Ganaste")
-        break
-    elif intentos == 6:
-        print("\n Legaste al limite de intentos. Perdiste")
+        if len(entrada) != cantidad_letras:
+            print(f"La palabra debe tener {cantidad_letras} letras.")
+            continue
 
+        intentos += 1
+        pista = verificador_palabra(entrada, palabra_secreta)
+        print(f"Resultado: {pista}")
+
+        if entrada == palabra_secreta:
+            print("\n¡Acertaste la palabra! GANASTE")
+            break
+        
+        if intentos == max_intentos:
+            print(f"\nLlegaste al límite de intentos. La palabra era: {palabra_secreta}")
+
+iniciar_juego()
